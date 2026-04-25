@@ -9,7 +9,7 @@ genai.configure(api_key="AIzaSyD8QL3FPlh6wpfJnoXz9mSIfPn3d5CFpu0")
 
 # The most stable model name for nigerian regions
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-
+model = genai.GenerativeModel('gemini-pro')
 st.title("DAN AI Interface")
 st.write("Assignment Submission")
 
