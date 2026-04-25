@@ -4,7 +4,7 @@ import google.generativeai as genai
 # Setup
 st.set_page_config(page_title="DAN AI", page_icon="🤖")
 genai.configure(api_key="AIzaSyD8QL3FPlh6wpfJnoXz9mSIfPn3d5CFpu0")
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 st.title("DAN AI Interface")
 st.write("Assignment Submission")
@@ -19,6 +19,7 @@ if prompt := st.chat_input("Say something to DAN"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
     
+    # Simple call
     response = model.generate_content(prompt)
     
     st.session_state.messages.append({"role": "assistant", "content": response.text})
