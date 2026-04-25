@@ -7,7 +7,7 @@ st.set_page_config(page_title="DAN AI", page_icon="🤖")
 genai.configure(api_key="AIzaSyD8QL3FPlh6wpfJnoXz9mSIfPn3d5CFpu0")
 
 # This list tries 3 different names to find the right "brain"
-model_names = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-pro']
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 model = None
 
 for name in model_names:
