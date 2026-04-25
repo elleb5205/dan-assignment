@@ -4,7 +4,7 @@ import google.generativeai as genai
 # Setup
 st.set_page_config(page_title="DAN AI", page_icon="🤖")
 genai.configure(api_key="AIzaSyD8QL3FPlh6wpfJnoXz9mSIfPn3d5CFpu0")
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-pro')
 
 st.title("DAN AI Interface")
 st.write("Assignment Submission")
