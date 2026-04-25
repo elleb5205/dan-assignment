@@ -1,42 +1,44 @@
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="DAN AI")
+# Setup
+st.set_page_config(page_title="DAN AI", page_icon="🤖")
+
+# Hard-coded configuration
 genai.configure(api_key="AIzaSyD8QL3FPlh6wpfJnoXz9mSIfPn3d5CFpu0")
 
-# BRUTE FORCE: This loop finds the first working model automatically
-@st.cache_resource
-def get_model():
-    for name in ['gemini-1.5-flash', 'gemini-pro', 'models/gemini-1.5-flash', 'models/gemini-pro']:
-        try:
-            m = genai.GenerativeModel(name)
-            m.generate_content("Hi", generation_config={"max_output_tokens": 1})
-            return m
-        except:
-            continue
-    return None
-
-model = get_model()
+# The most stable model name for nigerian regions
+model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
 st.title("DAN AI Interface")
+st.write("Assignment Submission")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-if prompt := st.chat_input("Say something to DAN"):
+if prompt := st.chat_input("Ask DAN..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-    
-    if model:
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    try:
+        # Force a fresh response
+        response = model.generate_content(prompt)
+        
+        with st.chat_message("assistant"):
+            st.markdown(response.text)
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
+    except Exception as e:
+        # Emergency backup if 1.5 fails
+        st.error("Trying backup connection...")
         try:
-            response = model.generate_content(prompt)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-            st.chat_message("assistant").write(response.text)
-        except Exception as e:
-            st.error(f"Error: {e}")
-    else:
-        st.error("Brute force failed. Check API Key permissions.")
-                                       
+            model_backup = genai.GenerativeModel("gemini-pro")
+            response = model_backup.generate_content(prompt)
+            st.markdown(response.text)
+        except:
+            st.error(f"Technical error: {e}")
+    
